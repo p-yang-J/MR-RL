@@ -29,9 +29,5 @@ scale1_y & = \frac{10000}{1 + \exp(-|error_y| / 500)}\\
 scale1_z & = \frac{10000}{1 + \exp(-|error_z| / 500)}
 \end{align*}
 
-Fig. \ref{handware system} (d) illustrates the relationship between the motion mapping coefficient and the corresponding error. Notably, when the error increases, the rate of change in the scale diminishes, converging to a stable value. Such a design choice enhances the system's safety, mitigating potential risks associated with an overly magnified mapping coefficient, especially under conditions of significant error. A base scaling factor $scale2$ is set to a constant value.  $scale2 = 6000$ is used in our paper, which represents a value used in general teleoperated microsurgical robotic systems. 
-
-
-
 
 To take user-specific characteristics and varying experience levels into consideration,   $scale3$ is used as the component to further regulate the motion scaling ratio for different users, and ensure that their motion curves during operation are smooth, compliant, and safe. $scale3$ is derived from offline RL,

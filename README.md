@@ -16,3 +16,22 @@ Step 6: Having already constructed the HoloLens through the above steps, you can
 Step 7: Package the program for testing on real machines.
 
 #RL learning
+
+This project uses the d3rlpy library(https://d3rlpy.readthedocs.io/en/v2.1.0/) for offline reinforcement learning applications. In the project, training and validation in the 'offline_' code utilize the 'mdpdataset' method, first collecting data for offline training before application. For example, in 'offline_new', 'datacollect' is initially set to true, and 'evaluation' is set to false. The collected action, reward, terminal, and observation data are utilized in 'run_RL' to perform offline training, obtaining the post-training model which is then input into the 'offline_' program. Here, 'datacollect' is set to false, and 'evaluation' is set to true for training.
+
+The adaptive scaling ratio (factor) $\text{Scale}_{\text{ada}}$ is  defined as:
+\newline ~~ $\text{Scale}_{\text{ada}} = \text{Scale}_1 + \text{Scale}_2 + \text{Scale}_3$ (see Algorithm 1).
+
+In the initial step of our algorithm, we acquire a prior trajectory, which can also be known as expert demonstration data (denoted as $T$).  Based on the prior trajectory $T$, a damping gradient is set up. It implies that the closer the real-time movement is to the trajectory $T$, the slower the robot's motion. This is achieved by computing the deviation $(error_x, error_y, error_z)$ of the real-time position from the nearest point on $T$ in $x$, $y$, $z$ directions, and mapping these deviations to a damping-based scaling factor $scale1$. Specifically, the mapping function is given by:
+\begin{align*}
+scale1_x & = \frac{10000}{1 + \exp(-|error_x| / 500)}\\
+scale1_y & = \frac{10000}{1 + \exp(-|error_y| / 500)}\\
+scale1_z & = \frac{10000}{1 + \exp(-|error_z| / 500)}
+\end{align*}
+
+Fig. \ref{handware system} (d) illustrates the relationship between the motion mapping coefficient and the corresponding error. Notably, when the error increases, the rate of change in the scale diminishes, converging to a stable value. Such a design choice enhances the system's safety, mitigating potential risks associated with an overly magnified mapping coefficient, especially under conditions of significant error. A base scaling factor $scale2$ is set to a constant value.  $scale2 = 6000$ is used in our paper, which represents a value used in general teleoperated microsurgical robotic systems. 
+
+
+
+
+To take user-specific characteristics and varying experience levels into consideration,   $scale3$ is used as the component to further regulate the motion scaling ratio for different users, and ensure that their motion curves during operation are smooth, compliant, and safe. $scale3$ is derived from offline RL,
